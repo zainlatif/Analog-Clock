@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clock with Dark Mode</title>
+    <link href="https://fonts.googleapis.com/css?family=Heebo:300&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #000;
+            --secondary-color: #fff;
+        }
+
+        html {
+            transition: all 0.5s ease-in;
+        }
+
+        html.dark {
+            --primary-color: #fff;
+            --secondary-color: #333;
+            background-color: #111;
+            color: var(--primary-color);
+        }
+
+        body {
+            font-family: 'Heebo', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .toggle {
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            border: 0;
+            border-radius: 4px;
+            padding: 8px 12px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .toggle:focus {
+            outline: none;
+        }
+
+        .clock-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .clock {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .needle {
+            background-color: var(--primary-color);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 65px;
+            width: 3px;
+            transform-origin: bottom center;
+            transition: all 0.5s ease-in linear;
+        }
+
+        .needle.hour {
+            height: 50px;
+            transform: translate(-50%, -100%) rotate(0deg);
+        }
+
+        .needle.minute {
+            height: 70px;
+            transform: translate(-50%, -100%) rotate(0deg);
+        }
+
+        .needle.second {
+            height: 90px;
+            background-color: #e74c3c;
+            transform: translate(-50%, -100%) rotate(0deg);
+        }
+
+        .center-point {
+            background-color: #e74c3c;
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+
+        .time {
+            font-size: 60px;
+        }
+
+        .date {
+            color: #aaa;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <div class="clock-container">
+        <div class="clock">
+            <div class="needle hour" id="hour-needle"></div>
+            <div class="needle minute" id="minute-needle"></div>
+            <div class="needle second" id="second-needle"></div>
+            <div class="center-point"></div>
+        </div>
+        <div class="time" id="time"></div>
+        <div class="date" id="date"></div>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            const hourDegrees = (hours % 12) * 30 + (minutes / 2);
+            const minuteDegrees = minutes * 6;
+            const secondDegrees = seconds * 6;
+
+            document.getElementById('hour-needle').style.transform = `translate(-50%, -100%) rotate(${hourDegrees}deg)`;
+            document.getElementById('minute-needle').style.transform = `translate(-50%, -100%) rotate(${minuteDegrees}deg)`;
+            document.getElementById('second-needle').style.transform = `translate(-50%, -100%) rotate(${secondDegrees}deg)`;
+
+            document.getElementById('time').textContent = now.toLocaleTimeString();
+            document.getElementById('date').textContent = now.toLocaleDateString();
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock(); // initial call to display clock immediately
+    </script>
+</body>
+</html>
